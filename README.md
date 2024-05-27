@@ -1,6 +1,6 @@
 # Projects for ASU CSE548
 
-![ASU Ira A. Fulton Schools of Engineering](images/asu.png)
+[ASU Ira A. Fulton Schools of Engineering]
 
 # How to use the files here?
 Every Folder contains the files dedicated to an assignment.
@@ -8,12 +8,10 @@ Every Folder contains the files dedicated to an assignment.
 ## Important Notes
 - In downloading and reading those assignments, you are acknowledging Arizona State Universities's Academic Integrity Guidelines reported [here](https://www.coursera.org/learn/asu-mcs-onboarding/home/week/3).
 # Project 1 - Packet Filter Firewall
-In this lab we are exploring how a packet filter firewall works by setting up an environment based on two Linux virtual machines – one working as a dual-homes Gateway client, which can access external networks on one interface – and another set up as a Client, which can only access external networks through the gateway. The gateway will be configured with the Linux iptables firewall and will also enable NAT for selected protocols.
-The lab will also setup a web server on the Gateway with a test web page. We will test having full control of the network traffic, allowing only specific protocols for specific destinations at will, by modifying specific parameters in the firewall script.
+In this lab, we explore the workings of a packet filter firewall by setting up an environment with two Linux virtual machines. One machine functions as a dual-homed Gateway client, accessing external networks through one interface, while the other serves as a Client that can only access external networks via the gateway. The gateway is configured with the Linux iptables firewall and enables NAT for selected protocols. Additionally, a web server is set up on the Gateway with a test web page. We will demonstrate full control over network traffic by allowing only specific protocols for specific destinations through modifications to the firewall script.
 # Project 2 - SDN-Based Stateless Firewall
-In this lab we are exploring how to set up a software defined environment based on mininet and containernet. We also get to practice how to set up an OpenFlow based flow-level firewall on SDN. Finally, we need to set up and practice flow-based firewall filtering policies such as enabling the ability to accept, drop, or reject the incoming flows thus ensuring the safety of the system from malicious attacking network traffic.
+This lab focuses on setting up a software-defined environment using Mininet and Containernet. We practice configuring an OpenFlow-based flow-level firewall on SDN and develop and implement flow-based firewall filtering policies. These policies include accepting, dropping, or rejecting incoming flows to ensure the system's safety from malicious network traffic.
 # Project 3 - SDN-Based DoS Attacks and Mitigation
-In this lab I am emulating Denial of Service (DoS) attacks in an SDN networking environment. DDoS Attacks can target various components in the SDN infrastructure. I am setting up an SDN-based firewall environment based on containernet, POX controller, and Over Virtual Switch (OVS). To mitigate DoS attacks, I have developed a “port security” solution to counter the implemented DoS attacks.
-In the lab I am implementing firewall filtering rules in order to implement the required firewall security policies, along with a sequence of screenshots and corresponding illustrations to demonstrate how I have fulfilled the firewall’s packet filtering requirements.
+n this lab, I simulate Denial of Service (DoS) attacks in an SDN networking environment. DDoS attacks can target various components within the SDN infrastructure. I set up an SDN-based firewall environment using Containernet, POX controller, and Open Virtual Switch (OVS). To mitigate DoS attacks, I develop a "port security" solution. The lab involves implementing firewall filtering rules to enforce required security policies, accompanied by screenshots and illustrations demonstrating how the firewall's packet filtering requirements are met.
 # Project 4 - Machine Learning-Based Anomaly Detection Solutions
-In this lab I am using the NSL-KDD dataset, which is a refined version of KDD’99 dataset, with the purpose of running two labs for data pre-processing, training and testing using Anaconda, TensorFlow and FNN. NSL-KDD dataset is now considered as one of most common for network traffic and attacks, and it is a benchmark for modern-day internet traffic.
+In this lab, I utilize the NSL-KDD dataset, a refined version of the KDD’99 dataset, to conduct two labs focusing on data preprocessing, training, and testing using Anaconda, TensorFlow, and FNN. The NSL-KDD dataset is widely used for network traffic and attack analysis and serves as a benchmark for modern internet traffic.
