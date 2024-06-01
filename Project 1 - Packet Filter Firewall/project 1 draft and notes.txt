@@ -1,0 +1,100 @@
+
+- all the rules are written at gateway vm
+
+client IP = 10.0.2.6 
+client interface = enp0s3 
+gateway/server IP for NATnetwork  =  10.0.2.7
+gateway/server IP for NATnetwork1  =  10.0.1.4 , interface (to the internet) =  enp0s8 
+
+
+# Allow http traffic from client network to server network
+IPTABLES -A FORWARD -p icmp -o 10.0.2.6 -s 8.8.8.8 -j ACCEPT
+$IPTABLES -A FORWARD -p icmp -s 10.2.0.5 -i 10.0.2.6 -d 8.8.8.8 -j ACCEPT
+
+
+# Provide your input rules below to allow web traffic from client
+iptables  -A INPUT -p TCP --dport 80 -i enp0s3 -s 10.0.2.6 -j ACCEPT
+iptables -A OUTPUT -p TCP --sport 80 -o enp0s3  -s 10.0.2.7 -d 10.0.2.6 -j ACCEPT
+
+iptables -L --line-numbers
+iptables -L INPUT --line-numbers
+
+#delete a rule number for Input table
+iptables -D INPUT 3
+
+# start apache server
+service apache2 status 
+
+# enable packet forwarding on gateway VM 
+echo "1" > /proc/sys/net/ipv4/ip_forward
+
+sudo iptables -L  % display the filter table policies
+
+iptables -P INPUT DROP     % default policy to drop for input chain
+iptables -P OUTPUT DROP  % default policy to drop for OUTPUT chain
+iptables -P FORWARD DROP  % default policy to drop for FORWARD chain
+
+iptables -F       % flush all existing chains
+iptables -X       % delete all user defined chains
+
+#enable packet forwarding on gateway VM to internace name enp0s8 so that client VM can access internet throu gateway VM , replace "exit_interface" with "enp0s8", do not use " "
+iptables -t nat -A POSTROUTING -o exit_interface -j MASQUERADE
+
+#show the post rounting rules for NAT table 
+iptables -t nat -L POSTROUTING -n -v --line-number 
+
+iptables -P FORWARD DROP
+
+# know the DNS of a website
+ nslookup www.google.com
+
+# start apache server
+sudo systemctl start apache2
+
+Check and set the default iptables policies to DROP for INPUT, OUPUT, and FORWARD chains. This
+setup is basically implement a whitelist policy, i.e., only allowing specific network traffic as “good” traffic
+to pass through, and thus disable all other non-specified traffic. Note that only allow the required traffic
+flow and connectivity described in below, and drop all other network traffic and access
+
+( only allow the IP of the client)
+
+
+3. Stop the client from pinging the Gateway/Server VM’s IP address.
+on the gateway VM, drop for "input" chain for the client and for protocol ICMP
+
+iptables -A INPUT -i enp0s3 -s 10.0.2.6 -p icmp --icmp-type echo-request -j DROP
+
+
+4. Allow the client to ping 8.8.8.8 (an public IP address on internet)
+on the gateway VM, allow the ICMP protocol for "forward" chain for NAT table 
+
+
+enable POSTROUTING chain for NAT table  to allow client to access outside network(8.8.8.8) and change their source
+IP addresses. we can provide gateway IF(rounter)  of my host OS and replace the client IP address
+
+iptables -t nat -A POSTROUTING -s 10.0.2.6 -d 8.8.8.8 -p icmp --icmp-type echo-request -j SNAT --to-source 192.168.1.1
+
+iptables -t nat -A POSTROUTING -s 8.8.8.8 -d 10.0.2.6 -p icmp --icmp-type echo-reply -j accept
+
+iptables -A FORWARD -s 10.0.2.6 -d 8.8.8.8 -p icmp --icmp-type echo-request -j ACCEPT
+iptables -A FORWARD -s 8.8.8.8 -d 10.0.2.6 -p icmp --icmp-type echo-reply -j ACCEPT
+
+iptables -A INPUT -s 10.0.2.6 -d 8.8.8.8 -i enp0s3  -p icmp --icmp-type echo-request -j ACCEPT
+iptables -A OUTPUT -s 8.8.8.8 -d 10.0.2.6 -o enp0s8 -p  icmp --icmp-type echo-reply -j ACCEPT
+
+
+iptables -t nat -A INPUT -s 10.0.2.6 -d 8.8.8.8 -i enp0s3  -p icmp --icmp-type echo-request -j ACCEPT
+iptables -t nat -A OUTPUT -s 8.8.8.8 -d 10.0.2.6 -o enp0s8 -p  icmp --icmp-type echo-reply -j ACCEPT
+
+iptables -t nat -A POSTROUTING -p icmp -o enp0s8  -d 8.8.8.8 -j MASQUERADE
+
+the answer is this general command( I got it from lab PDF name "lab-cs-net-00002_Computer Network Gateway Setup"):
+iptables -t nat -A POSTROUTING -o exit_interface -j MASQUERADE  % where exit_interface  is the enterface of the network of the internet (enp0s8 )
+
+
+
+
+Besides the allowed network access described the above, you should not allow any other network
+access
+1- drop for inptu , output , forward, 
+2- then add another rule to the same chain for the ip of the client
